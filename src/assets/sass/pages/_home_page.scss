@@ -1,0 +1,32 @@
+.home-page {
+  .hero-overlay {
+    position: relative;
+    height: 90vh;
+    background: url('../picture.png');
+    background-size: cover;
+    background-position: center center;
+
+    .slogan {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      &__text {
+        font-size: 35px;
+        font-weight: 700;
+      }
+    }
+    .filter-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(255, 255, 255, 0.644);
+      width: 85%;
+      display: block;
+      padding: 2rem;
+      border-radius: 15px;
+    }
+  }
+}
