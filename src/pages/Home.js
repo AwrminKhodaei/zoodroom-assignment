@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import classnames from 'classnames'
 import Layout from '../layout/master';
 import { cityServices } from '../services/city.service';
 import { toast } from 'react-toastify';
 import { typesServices } from '../services/types.service';
 import { roomsServices } from '../services/rooms.service';
-import classnames from 'classnames'
-import Rooms from '../components/Rooms';
 import { setURLParams } from '../actions/roomActions';
+import Rooms from '../components/Rooms';
+
 class Home extends Component {
 	state = {
 		cities: [],
@@ -30,6 +30,8 @@ class Home extends Component {
 	}
 
 
+	// handle query rooms
+	// also checks for validation here
 	handleQuery = () => {
 		const { selectedCapacity, slectedCity, slectedCityId, roomType, roomTypeName } = this.state
 		// Check for erros here
@@ -46,6 +48,7 @@ class Home extends Component {
 			return
 		} else {
 
+			// dispatch query params to redux store
 			this.props.dispatch(setURLParams({
 				capacity: selectedCapacity,
 				slectedCity,
@@ -53,12 +56,14 @@ class Home extends Component {
 				roomType,
 				roomTypeName,
 			}))
+			// push query to url
 			this.props.history.push(`/rooms/${slectedCity}?guest=${selectedCapacity}&type=${roomType}`)
 
 		}
 
 	}
 
+	// handle dropdown change status 
 	handleDropDownChange = (event, name) => {
 		// persist event to get data
 		event.persist();
@@ -86,6 +91,7 @@ class Home extends Component {
 
 	}
 
+	// Get all cities for dropdown
 	handleGetAllCities = () => {
 		cityServices.getAllCities()
 			.then(response => {
@@ -106,6 +112,7 @@ class Home extends Component {
 			})
 	}
 
+	// Get all types for dropdown
 	handleGetAllTypes = () => {
 		typesServices.getAllTypes()
 			.then(response => {
@@ -126,6 +133,7 @@ class Home extends Component {
 			})
 	}
 
+	// Get all rooms to dispaly in lates rooms section
 	handleGetAllRooms = () => {
 		roomsServices.getAllRooms()
 			.then(response => {
@@ -147,10 +155,11 @@ class Home extends Component {
 
 			})
 	}
+
 	render() {
 
-
 		const { cities, roomTypes, guests, rooms, errors } = this.state
+		
 		return (
 			<Layout
 				activeLink='home'

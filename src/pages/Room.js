@@ -11,6 +11,7 @@ class RoomPage extends Component {
     this.handleGetRoom()
   }
 
+  // Get room info
   handleGetRoom = () => {
     const { code } = this.props.match.params
     roomsServices.getRoom(code)

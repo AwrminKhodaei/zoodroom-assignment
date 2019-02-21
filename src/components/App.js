@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux'
+import store from '../store';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 import '../styles/App.scss';
 import Home from "../pages/Home";
 import RoomPage from "../pages/Room";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 import RoomsPage from "../pages/Rooms";
-import { Provider } from 'react-redux'
-import store from '../store';
 
 class App extends Component {
 	NotFound = () => {
@@ -15,7 +16,6 @@ class App extends Component {
 			<h1>404</h1>
 		)
 	}
-
 	render() {
 		return (
 			<Provider store={store}>

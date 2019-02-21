@@ -1,5 +1,6 @@
 import { SET_CITY } from "./types";
 
+// actions to set query params
 export const setURLParams = (data) => ({
   type: SET_CITY,
   id: Number(data.slectedCityId),

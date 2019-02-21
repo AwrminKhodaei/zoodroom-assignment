@@ -33,7 +33,8 @@ class RoomsPage extends Component {
 	}
 
 
-
+	// handle query rooms
+	// also checks for validation here
 	handleQuery = () => {
 		const { selectedCapacity, slectedCity, slectedCityId, roomType, roomTypeName } = this.state
 		// Check for erros here
@@ -50,6 +51,7 @@ class RoomsPage extends Component {
 			return
 		} else {
 
+			// dispatch query params to redux store
 			this.props.dispatch(setURLParams({
 				capacity: selectedCapacity,
 				slectedCity,
@@ -57,12 +59,17 @@ class RoomsPage extends Component {
 				roomType,
 				roomTypeName,
 			}))
+			// update url
 			this.props.history.replace(`/rooms/${slectedCity}?guest=${selectedCapacity}&type=${roomType}`)
+
+			// Get new Room's detail 
 			this.handleGetRooms(this.props.city.state.roomType, this.props.city.state.capacity, this.props.city.state.city_id)
 
 		}
 
 	}
+
+	// handle dropdown change status 
 	handleDropDownChange = (event, name) => {
 		// persist event to get data
 		event.persist();
@@ -90,6 +97,7 @@ class RoomsPage extends Component {
 
 	}
 
+	// Get all cities for dropdown
 	handleGetAllCities = () => {
 		cityServices.getAllCities()
 			.then(response => {
@@ -110,6 +118,7 @@ class RoomsPage extends Component {
 			})
 	}
 
+	// Get all types for dropdown
 	handleGetAllTypes = () => {
 		typesServices.getAllTypes()
 			.then(response => {
@@ -117,7 +126,7 @@ class RoomsPage extends Component {
 					this.setState({
 						roomTypes: response.data
 					})
-				} else if(response.status === 404){
+				} else if (response.status === 404) {
 					toast.error('No room found!')
 				}
 
@@ -130,9 +139,12 @@ class RoomsPage extends Component {
 			})
 	}
 
+	// funtion to get room with query params
 	handleGetRooms = () => {
-		const { state } = this.props.city
-		roomsServices.getRoomByQuery(this.props.city.state.roomType, this.props.city.state.capacity, this.props.city.state.city_id)
+
+		const { roomType, capacity, city_id } = this.props.city.state
+
+		roomsServices.getRoomByQuery(roomType, capacity, city_id)
 			.then(response => {
 				if (response.status === 200) {
 					this.setState({
@@ -141,17 +153,17 @@ class RoomsPage extends Component {
 				} else {
 					toast.error('Error getting rooms from api')
 				}
-
-
 			})
 			.catch(err => {
 				console.log(err);
 				toast.error('Error getting rooms from api')
-
 			})
 	}
 	render() {
-		const { cities, roomTypes, guests, rooms, errors } = this.state
+		// destructure stuff from state and reduxt store
+		const { cities, roomTypes, guests, rooms, selectedCapacity, slectedCityId, errors } = this.state
+		const { roomTypeName, capacity, city_id, name } = this.props.city.state
+
 		return (
 			<Layout activeLink='room' pageClass='rooms-page'>
 				<div className="hero-overlay">
@@ -164,7 +176,7 @@ class RoomsPage extends Component {
 								<select
 									className={classnames('form-control', { "is-invalid": errors.capacity })}
 									onChange={(e) => this.handleDropDownChange(e, 'city')}>
-									<option value={this.props.city.state.city_id}>{this.props.city.state.name}</option>
+									<option value={city_id}>{name}</option>
 									{cities && cities.map(city => (
 										<option value={city.id} key={city.id}>{city.name}</option>
 									))}
@@ -174,7 +186,7 @@ class RoomsPage extends Component {
 							</div>
 							<div className="col-md-3">
 								<select className="form-control" onChange={(e) => this.handleDropDownChange(e, 'type')}>
-									<option value={this.props.city.state.roomTypeName}>{this.props.city.state.roomTypeName}</option>
+									<option value={roomTypeName}>{roomTypeName}</option>
 									{roomTypes && roomTypes.map(type => (
 										<option value={type.id} key={type.id}>{type.name}</option>
 									))}
@@ -182,7 +194,7 @@ class RoomsPage extends Component {
 							</div>
 							<div className="col-md-3">
 								<select className="form-control" onChange={(e) => this.handleDropDownChange(e, 'capacity')}>
-									<option value={this.props.city.state.capacity}>{this.props.city.state.capacity}</option>
+									<option value={capacity}>{capacity}</option>
 									{guests && guests.map((item, key) => (
 										<option value={item} key={key}>{item}</option>
 									))}
@@ -192,7 +204,7 @@ class RoomsPage extends Component {
 								<button
 									className="btn btn-success px-5 ml-md-5"
 									onClick={this.handleQuery}
-									disabled={!(this.state.selectedCapacity && this.state.slectedCityId)}>
+									disabled={!(selectedCapacity && slectedCityId)}>
 									Check Availibility
 									</button>
 							</div>
@@ -200,21 +212,21 @@ class RoomsPage extends Component {
 
 					</div>
 				</div>
-					<div className="latest-rooms mt-5">
-						<div className="row">
-							<div className="col-md-12">
-								<h2 className="text-center mb-5">LATEST ROOMS</h2>
-								<div className="row">
-									<div className="col-md-8 mx-auto">
+				<div className="latest-rooms mt-5">
+					<div className="row">
+						<div className="col-md-12">
+							<h2 className="text-center mb-5">LATEST ROOMS</h2>
+							<div className="row">
+								<div className="col-md-8 mx-auto">
 									{
-										rooms.length> 0 ?
-										<Rooms rooms={rooms} />
-										: <h2 className="text-center">Not Found</h2>
+										rooms.length > 0 ?
+											<Rooms rooms={rooms} />
+											: <h2 className="text-center">Not Found</h2>
 									}
-									</div>
 								</div>
 							</div>
 						</div>
+					</div>
 				</div>
 			</Layout>
 		);
