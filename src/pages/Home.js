@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Layout from '../layout/master';
 import { cityServices } from '../services/city.service';
 import { toast } from 'react-toastify';
@@ -7,11 +8,13 @@ import { typesServices } from '../services/types.service';
 import { roomsServices } from '../services/rooms.service';
 import classnames from 'classnames'
 import Rooms from '../components/Rooms';
-import { addCity } from '../actions/roomActions';
+import { setURLParams } from '../actions/roomActions';
 class Home extends Component {
 	state = {
 		cities: [],
 		roomTypes: [],
+		roomType: '',
+		roomTypeName: '',
 		rooms: [],
 		guests: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 		slectedCityId: null,
@@ -28,7 +31,7 @@ class Home extends Component {
 
 
 	handleQuery = () => {
-		const { selectedCapacity, slectedCity, slectedCityId } = this.state
+		const { selectedCapacity, slectedCity, slectedCityId, roomType, roomTypeName } = this.state
 		// Check for erros here
 
 		if (selectedCapacity === 'null') {
@@ -43,8 +46,14 @@ class Home extends Component {
 			return
 		} else {
 
-			this.props.dispatch(addCity(Number(slectedCityId)))
-			this.props.history.push(`/rooms/${slectedCity}?guest=${selectedCapacity}&type=3`)
+			this.props.dispatch(setURLParams({
+				capacity: selectedCapacity,
+				slectedCity,
+				slectedCityId,
+				roomType,
+				roomTypeName,
+			}))
+			this.props.history.push(`/rooms/${slectedCity}?guest=${selectedCapacity}&type=${roomType}`)
 
 		}
 
@@ -66,6 +75,12 @@ class Home extends Component {
 		if (name === 'capacity') {
 			this.setState({
 				selectedCapacity: event.target.value
+			})
+		}
+		if (name === 'type') {
+			this.setState({
+				roomType: event.target.value,
+				roomTypeName: event.nativeEvent.target[index].text
 			})
 		}
 
@@ -133,6 +148,8 @@ class Home extends Component {
 			})
 	}
 	render() {
+
+
 		const { cities, roomTypes, guests, rooms, errors } = this.state
 		return (
 			<Layout
@@ -143,7 +160,6 @@ class Home extends Component {
 						<h2 className="slogan__text text-white">LUXURY SPACE THAT YOU CAN AFFOR <br /> WHERE DREAMS COME TRUE</h2>
 					</div>
 					<div className="filter-container">
-						{this.state.selectedCapacity} || {this.state.slectedCityId}
 						<div className="row">
 							<div className="col-md-3">
 								<select
@@ -162,7 +178,7 @@ class Home extends Component {
 								<select className="form-control" onChange={(e) => this.handleDropDownChange(e, 'type')}>
 									<option value="">select room type</option>
 									{roomTypes && roomTypes.map(type => (
-										<option value={type.name} key={type.id}>{type.name}</option>
+										<option value={type.id} key={type.id}>{type.name}</option>
 									))}
 								</select>
 							</div>
@@ -185,7 +201,7 @@ class Home extends Component {
 						</div>
 					</div>
 				</div>
-				<div className="latest-rooms mt-5">
+				<div className="latest-rooms">
 					<div className="row">
 						<div className="col-md-12">
 							<h2 className="text-center mb-5">LATEST ROOMS</h2>

@@ -14,8 +14,14 @@ const getRoom = (code) => {
     url: appConstants.BASE_URL + `/rooms/${code}`
   })
 }
-
+const getRoomByQuery = (type, capacity, city) => {
+  return axios({
+    method: 'get',
+    url: appConstants.BASE_URL + `/rooms?type=${type}&capacity=${capacity}&city=${city}`
+  })
+}
 export const roomsServices = {
   getAllRooms,
-  getRoom
+  getRoom,
+  getRoomByQuery
 };
