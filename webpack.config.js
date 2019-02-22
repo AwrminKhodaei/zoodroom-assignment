@@ -5,25 +5,20 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 module.exports = {
   entry: path.join(__dirname, 'src', 'index.js'),
   output: {
-    path: path.join(__dirname, 'build'),
-    filename: 'index.bundle.js'
+    path: path.join(__dirname, 'public'),
+    filename: 'bundle.js'
   },
   mode: process.env.NODE_ENV || 'development',
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   devServer: {
-    contentBase: path.join(__dirname, 'src'),
+    contentBase: path.join(__dirname, 'public'),
     publicPath: '/',
     historyApiFallback: true,
     port: process.env.PORT || 3000
 
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'index.html')
-    })
-  ],
   module: {
     rules: [
       {

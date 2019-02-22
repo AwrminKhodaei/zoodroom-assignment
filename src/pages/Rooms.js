@@ -161,7 +161,7 @@ class RoomsPage extends Component {
 	}
 	render() {
 		// destructure stuff from state and reduxt store
-		const { cities, roomTypes, guests, rooms, selectedCapacity, slectedCityId, errors } = this.state
+		const { cities, roomTypes, guests, rooms, selectedCapacity, slectedCityId } = this.state
 		const { roomTypeName, capacity, city_id, name } = this.props.city.state
 
 		return (
@@ -174,7 +174,7 @@ class RoomsPage extends Component {
 						<div className="row">
 							<div className="col-md-3">
 								<select
-									className={classnames('form-control', { "is-invalid": errors.capacity })}
+									className="form-control"
 									onChange={(e) => this.handleDropDownChange(e, 'city')}>
 									<option value={city_id}>{name}</option>
 									{cities && cities.map(city => (
@@ -182,7 +182,6 @@ class RoomsPage extends Component {
 									))}
 
 								</select>
-								<div class="invalid-feedback">Example invalid custom select feedback</div>
 							</div>
 							<div className="col-md-3">
 								<select className="form-control" onChange={(e) => this.handleDropDownChange(e, 'type')}>

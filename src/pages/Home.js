@@ -137,8 +137,6 @@ class Home extends Component {
 	handleGetAllRooms = () => {
 		roomsServices.getAllRooms()
 			.then(response => {
-				console.log(response);
-
 				if (response.status === 200) {
 					this.setState({
 						rooms: response.data
@@ -172,7 +170,7 @@ class Home extends Component {
 						<div className="row">
 							<div className="col-md-3">
 								<select
-									className={classnames('form-control', { "is-invalid": errors.capacity })}
+									className="form-control"
 									onChange={(e) => this.handleDropDownChange(e, 'city')}>
 									<option value="">select city</option>
 									{cities && cities.map(city => (
@@ -180,7 +178,6 @@ class Home extends Component {
 									))}
 
 								</select>
-								<div class="invalid-feedback">Example invalid custom select feedback</div>
 
 							</div>
 							<div className="col-md-3">
